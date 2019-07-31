@@ -1,0 +1,20 @@
+CREATE TABLE tweet (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  body VARCHAR(255) NOT NULL,
+  parent INT,
+  userId INT
+);
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  firstName VARCHAR(255),
+  lastName VARCHAR(255),
+  password VARCHAR(255) NOT NULL,
+  login VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE likes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT NOT NULL,
+  tweetId INT NOT NULL
+);
