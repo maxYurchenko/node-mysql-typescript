@@ -5,12 +5,13 @@ class UserController {
   getUsers = (req: Request, res: Response) => {
     userModel.getUsers((err, result) => {
       if (err) {
-        res.status(500).send({
-          success: false
+        res.status(200).json({
+          success: false,
+          message: 'Database error'
         });
       } else {
-        res.status(200).send({
-          users: result,
+        res.status(200).json({
+          result,
           success: true
         });
       }

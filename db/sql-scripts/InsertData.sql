@@ -1,7 +1,7 @@
 INSERT INTO users
-  (firstName, lastName, password, login)
+  (firstName, lastName,email, password )
 VALUES
-  ('Maksym', 'Yurchenko', 'mvy', 'mvy123'),
-  ('Sergey', 'Tovt', 'st', 'st123'),
-  ('Ivan', 'Mykoriak', 'iim', 'iim123'),
-  ('Sergey', 'Ovdienko', 'so', 'so123')
+  ('Maksym', 'Yurchenko', 'mvy@norse.digital', '123'),
+  ('Sergey', 'Tovt', 'st@norse.digital', '123'),
+  ('Ivan', 'Mykoriak', 'iim@norse.digital', '123'),
+  ('Sergey', 'Ovdienko', 'osa@norse.digital', '123')
