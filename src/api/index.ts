@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import authRouter from './routes/authRouter';
+import likesRouter from './routes/likesRouter';
 import usersRouter from './routes/usersRouter';
 import tweetsRouter from './routes/tweetsRouter';
 
@@ -18,5 +19,6 @@ api.use(
 api.use('/users/', usersRouter);
 api.use('/tweet/', tweetsRouter);
 api.use('/auth/', authRouter);
+api.use('/like/', likesRouter);
 
 export default api;

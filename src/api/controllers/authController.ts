@@ -55,23 +55,22 @@ class authController {
       });
       return null;
     }
-    userModel.findByEmailPass(auth[0], auth[1], (err, result) => {
-      if (err || !result || !result[0] || !result.length) {
+    userModel.findByEmailPass(auth[0], auth[1]).then(user => {
+      if (!user) {
         res.status(200).json({
           success: false,
           message: 'User not found'
         });
-      } else {
-        let user = result[0];
-        res.status(200).json({
-          userId: user.id,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          token: this.getToken(user.id),
-          success: true
-        });
+        return null;
       }
+      res.status(200).json({
+        userId: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        token: this.getToken(user.id),
+        success: true
+      });
     });
   };
   signup = (req: Request, res: Response) => {
@@ -82,32 +81,19 @@ class authController {
         message: 'Both email and password required'
       });
     }
-    userModel.checkUserExixts(params.email, (err, result) => {
-      if (err) {
-        res.status(200).json({
-          success: false,
-          message: 'Database error.'
-        });
-      } else if (result) {
-        res.status(200).json({
-          success: false,
-          message: 'User already exists.'
-        });
-      }
+    userModel.checkUserExixts(params.email).then(user => {
+      res.send({
+        user,
+        success: true
+      });
     });
     params.firstName = params.firstName ? params.firstName : null;
     params.lastName = params.lastName ? params.lastName : null;
-    userModel.createUser(params, (err, result) => {
-      if (err) {
-        res.status(200).json({
-          success: false,
-          message: 'Database error.'
-        });
-      } else {
-        res.status(200).json({
-          success: true
-        });
-      }
+    userModel.createUser(params).then(user => {
+      res.status(200).json({
+        success: true,
+        user
+      });
     });
   };
 }

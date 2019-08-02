@@ -3,18 +3,25 @@ import userModel from '../models/userModel';
 
 class UserController {
   getUsers = (req: Request, res: Response) => {
-    userModel.getUsers((err, result) => {
-      if (err) {
-        res.status(200).json({
-          success: false,
-          message: 'Database error'
-        });
-      } else {
-        res.status(200).json({
-          result,
-          success: true
-        });
-      }
+    userModel.getAllUsers().then(users => {
+      res.send({
+        users,
+        success: true
+      });
+    });
+  };
+  getUserById = (req: Request, res: Response) => {
+    let id = req.params.id ? req.params.id : null;
+    if (!id)
+      res.send({
+        success: false,
+        message: 'id is required'
+      });
+    userModel.getUserById(id).then(user => {
+      res.send({
+        user,
+        success: true
+      });
     });
   };
 }

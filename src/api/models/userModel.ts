@@ -1,55 +1,44 @@
-import { User } from '../types/user';
-import dbHelper from '../helpers/db';
-import { MysqlError } from 'mysql';
+import { User } from '../entity/user';
+import { createConnection } from 'typeorm';
 
 class UserModel {
-  getUsers = (callback: (err: MysqlError | null, res: [] | null) => void) => {
-    var con = dbHelper.getDBConn();
-    con.query('SELECT * FROM users', function(err, res, fields) {
-      if (err) return callback(err, null);
-      callback(null, res);
+  getAllUsers = () =>
+    createConnection().then(async connection => {
+      const tweets = await connection.manager.find(User);
+      await connection.close();
+      return tweets;
     });
-  };
 
-  findByEmailPass = (
-    email: string,
-    pass: string,
-    callback: (err: MysqlError | null, res: User[] | null) => void
-  ) => {
-    var con = dbHelper.getDBConn();
-    let query = 'SELECT * FROM users WHERE email = "' + email + '" and password = "' + pass + '"';
-    con.query(query, function(err, res, fields) {
-      if (err) return callback(err, null);
-      callback(null, res);
+  findByEmailPass = (email: string, password: string) =>
+    createConnection().then(async connection => {
+      const user = await connection.manager.findOne(User, { where: { email, password } });
+      await connection.close();
+      return user;
     });
-  };
 
-  createUser = (params: any, callback: (err: MysqlError | null, res: [] | null) => void) => {
-    var con = dbHelper.getDBConn();
-    var query =
-      'INSERT INTO users (firstName, lastName, email, password) VALUES ("' +
-      params.firstName +
-      '", "' +
-      params.lastName +
-      '", "' +
-      params.email +
-      '", "' +
-      params.password +
-      '")';
-    con.query(query, function(err, res, fields) {
-      if (err) return callback(err, null);
-      callback(null, res);
+  createUser = (params: any) =>
+    createConnection().then(async connection => {
+      const user = new User();
+      user.firstName = params.firstName;
+      user.lastName = params.lastName;
+      user.email = params.email;
+      user.password = params.password;
+      await connection.manager.save(user);
+      await connection.close();
+      return user;
     });
-  };
-  checkUserExixts = (email: string, callback: (err: MysqlError | null, res: [] | null) => void) => {
-    var con = dbHelper.getDBConn();
-    var query = 'SELECT email FROM users where email = "' + email + '"';
-    con.query(query, function(err, res, fields) {
-      if (err) callback(err, null);
-      else if (!res || !res.length) callback(null, null);
-      else callback(null, res);
+  checkUserExixts = (email: string) =>
+    createConnection().then(async connection => {
+      const user = await connection.manager.find(User, { where: { email } });
+      await connection.close();
+      return user;
     });
-  };
+  getUserById = (id: number) =>
+    createConnection().then(async connection => {
+      const user = await connection.manager.findOne(User, { where: { id } });
+      await connection.close();
+      return user;
+    });
 }
 
 export default new UserModel();
