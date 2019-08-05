@@ -21,7 +21,10 @@ class TweetModel {
     });
   getAllTweets = () =>
     createConnection().then(async connection => {
-      const tweets = await connection.manager.find(Tweet, { relations: ['user'] });
+      const tweets = await connection.manager.find(Tweet, {
+        relations: ['user'],
+        where: { parent: null, deleted: 0 }
+      });
       await connection.close();
       return tweets;
     });
@@ -29,7 +32,7 @@ class TweetModel {
   getTweetsByUser = (userId: number) =>
     createConnection().then(async connection => {
       const tweets = await connection.manager.find(Tweet, {
-        where: { userId: userId },
+        where: { userId: userId, parent: null, deleted: 0 },
         relations: ['user']
       });
       await connection.close();
@@ -38,7 +41,7 @@ class TweetModel {
   getTweetById = (id: number) =>
     createConnection().then(async connection => {
       const tweets = await connection.manager.find(Tweet, {
-        where: { id },
+        where: { id, deleted: 0 },
         relations: ['user']
       });
       await connection.close();
@@ -47,7 +50,7 @@ class TweetModel {
   getTweetByParent = (parent: number) =>
     createConnection().then(async connection => {
       const tweets = await connection.manager.find(Tweet, {
-        where: { parent },
+        where: { parent, deleted: 0 },
         relations: ['user']
       });
       await connection.close();

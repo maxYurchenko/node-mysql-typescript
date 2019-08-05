@@ -13,7 +13,7 @@ class TweetsController {
       return false;
     }
     params.userId = req.user;
-    params.parent = req.params.parentId ? req.params.parentId : null;
+    params.parent = params.parent || null;
     tweetModel.createTweet(params).then(tweet => {
       res.send({
         tweet,
@@ -38,7 +38,7 @@ class TweetsController {
     });
   };
   getTweetsByParent = (req: Request, res: Response) => {
-    tweetModel.getTweetsByUser(req.params.parent).then((tweets: Tweet[]) => {
+    tweetModel.getTweetByParent(req.params.parent).then((tweets: Tweet[]) => {
       res.send({
         tweets,
         success: true
