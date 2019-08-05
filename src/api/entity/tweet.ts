@@ -16,7 +16,7 @@ export class Tweet {
   public userId!: number;
 
   @Column()
-  public createdAt!: string;
+  public createdAt!: Date;
 
   @Column()
   public deleted!: number;

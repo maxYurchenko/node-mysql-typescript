@@ -1,18 +1,15 @@
 import { createConnection } from 'typeorm';
 import { Tweet } from '../entity/tweet';
 import { User } from '../entity/user';
-import moment from 'moment';
 
 class TweetModel {
   createTweet = (params: any) =>
     createConnection().then(async connection => {
       const tweet = new Tweet();
-      tweet.userId = params.userId;
+      tweet.userId = parseInt(params.userId);
       tweet.parent = params.parent;
       tweet.body = params.body;
-      tweet.createdAt = moment()
-        .format('YYYY-MM-DD HH:mm:ss')
-        .toString();
+      tweet.createdAt = new Date();
       await connection.manager.save(tweet);
       let user = await connection.manager.findOne(User, { where: { id: tweet.userId } });
       if (user) tweet.user = user;
