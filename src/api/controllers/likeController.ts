@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import likeModel from '../models/likeModel';
+import { Tweet } from '../entity/tweet';
 
 class LikesController {
   likeTweet = (req: Request, res: Response) => {
@@ -10,9 +11,10 @@ class LikesController {
       });
       return false;
     }
-    likeModel.likeTweet(req.user, req.params.id).then(() => {
+    likeModel.likeTweet(req).then(tweet => {
       res.send({
-        success: true
+        success: true,
+        tweet
       });
     });
   };

@@ -1,5 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+  RelationCount,
+  OneToMany,
+  ManyToOne
+} from 'typeorm';
 import { User } from './user';
+import { Like } from './like';
 
 @Entity()
 export class Tweet {
@@ -9,7 +19,8 @@ export class Tweet {
   @Column()
   public body!: string;
 
-  @Column()
+  @ManyToOne(type => Tweet)
+  @JoinColumn()
   public parent!: number;
 
   @Column()
@@ -21,7 +32,23 @@ export class Tweet {
   @Column()
   public deleted!: number;
 
+  @OneToMany(type => Tweet, tweet => tweet.parent)
+  @JoinColumn({ name: 'parentId' })
+  public children!: Tweet[];
+
+  @OneToMany(type => Like, like => like.tweet)
+  @JoinColumn({ name: 'tweetId' })
+  public likes!: Like[];
+
   @OneToOne(type => User)
   @JoinColumn()
-  user!: User;
+  public user!: User;
+
+  @RelationCount((tweet: Tweet) => tweet.children)
+  public childrenAmount!: number;
+
+  public liked!: boolean;
+
+  @RelationCount((tweet: Tweet) => tweet.likes)
+  public likesCount!: number;
 }

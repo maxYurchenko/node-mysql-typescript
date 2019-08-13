@@ -22,7 +22,7 @@ class TweetsController {
     });
   };
   getAllTweets = (req: Request, res: Response) => {
-    tweetModel.getAllTweets().then((tweets: Tweet[]) => {
+    tweetModel.getAllTweets(req).then((tweets: Tweet[]) => {
       res.send({
         tweets,
         success: true
@@ -30,7 +30,7 @@ class TweetsController {
     });
   };
   getTweetsByUser = (req: Request, res: Response) => {
-    tweetModel.getTweetsByUser(req.params.userId).then((tweets: Tweet[]) => {
+    tweetModel.getTweetsByUser(req).then((tweets: Tweet[]) => {
       res.send({
         tweets,
         success: true
@@ -38,7 +38,7 @@ class TweetsController {
     });
   };
   getTweetsByParent = (req: Request, res: Response) => {
-    tweetModel.getTweetByParent(req.params.parent).then((tweets: Tweet[]) => {
+    tweetModel.getTweetByParent(req).then((tweets: Tweet[]) => {
       res.send({
         tweets,
         success: true

@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, Unique } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+  Unique,
+  ManyToOne
+} from 'typeorm';
 import { User } from './user';
 import { Tweet } from './tweet';
 
@@ -14,7 +22,7 @@ export class Like {
   @Column()
   public tweetId!: number | string;
 
-  @OneToOne(type => Tweet)
+  @ManyToOne(type => Tweet)
   @JoinColumn()
   tweet!: Tweet;
 
