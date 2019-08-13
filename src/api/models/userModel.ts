@@ -1,44 +1,39 @@
 import { User } from '../entity/user';
-import { createConnection } from 'typeorm';
+import { getManager } from 'typeorm';
 
 class UserModel {
-  getAllUsers = () =>
-    createConnection().then(async connection => {
-      const tweets = await connection.manager.find(User);
-      await connection.close();
-      return tweets;
-    });
+  getAllUsers = async () => {
+    const userRepository = getManager().getRepository(User);
+    const tweets = await userRepository.find();
+    return tweets;
+  };
 
-  findByEmailPass = (email: string, password: string) =>
-    createConnection().then(async connection => {
-      const user = await connection.manager.findOne(User, { where: { email, password } });
-      await connection.close();
-      return user;
-    });
+  findByEmailPass = async (email: string, password: string) => {
+    const userRepository = getManager().getRepository(User);
+    const user = await userRepository.findOne({ where: { email, password } });
+    return user;
+  };
 
-  createUser = (params: any) =>
-    createConnection().then(async connection => {
-      const user = new User();
-      user.firstName = params.firstName;
-      user.lastName = params.lastName;
-      user.email = params.email;
-      user.password = params.password;
-      await connection.manager.save(user);
-      await connection.close();
-      return user;
-    });
-  checkUserExixts = (email: string) =>
-    createConnection().then(async connection => {
-      const user = await connection.manager.find(User, { where: { email } });
-      await connection.close();
-      return user;
-    });
-  getUserById = (id: number) =>
-    createConnection().then(async connection => {
-      const user = await connection.manager.findOne(User, { where: { id } });
-      await connection.close();
-      return user;
-    });
+  createUser = async (params: any) => {
+    const userRepository = getManager().getRepository(User);
+    const user = new User();
+    user.firstName = params.firstName;
+    user.lastName = params.lastName;
+    user.email = params.email;
+    user.password = params.password;
+    await userRepository.save(user);
+    return user;
+  };
+  checkUserExixts = async (email: string) => {
+    const userRepository = getManager().getRepository(User);
+    const user = await userRepository.find({ where: { email } });
+    return user;
+  };
+  getUserById = async (id: number) => {
+    const userRepository = getManager().getRepository(User);
+    const user = await userRepository.findOne({ where: { id } });
+    return user;
+  };
 }
 
 export default new UserModel();
